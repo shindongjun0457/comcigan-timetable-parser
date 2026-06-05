@@ -1,152 +1,252 @@
-# 오현중학교 컴시간 시간표 대시보드
+# 컴시간 알리미 시간표 파서 & 학교 시간표 대시보드
 
-Cloudflare Pages + Pages Functions 구조입니다.
+컴시간 알리미(Comcigan) 시간표 데이터를 가져와 학교 시간표 웹 대시보드로 표시하는 JavaScript 기반 프로젝트입니다.
 
-## 파일 구조
+이 저장소는 **기존에 널리 검색되는 일부 컴시간 알리미 파싱 방식이 더 이상 정상 동작하지 않는 상황**에서, 현재 동작하는 요청 방식과 응답 처리 구조를 정리한 예제입니다.  
+학교 코드와 화면 설정을 수정하면 다른 학교에서도 응용할 수 있습니다.
 
-```txt
+> 오현중학교용으로 제작했지만, 학교 코드와 설정을 바꾸면 다른 학교에서도 활용할 수 있습니다.
+
+---
+
+## 주요 기능
+
+- 컴시간 알리미 서버에서 학교 시간표 데이터 조회
+- 학교 코드 기반 시간표 요청
+- 날짜 기준 시간표 표시
+- 학년 선택 기능
+- 반별·교시별 시간표 테이블 출력
+- HTML/CSS/JavaScript 기반 단일 웹 대시보드
+- Cloudflare Pages Functions를 활용한 API 프록시 구조
+- 다른 학교 시간표 웹앱 제작에 응용 가능
+
+---
+
+## 왜 이 프로젝트가 필요한가?
+
+컴시간 알리미 시간표 데이터를 활용하려는 개발자와 교사는 많지만, 기존에 검색되는 일부 파싱 예제는 컴시간 서버 구조 변화로 인해 현재 정상적으로 동작하지 않을 수 있습니다.
+
+이 프로젝트는 실제 학교 시간표 대시보드를 만들기 위해 작성된 코드이며, 현재 동작하는 방식으로 컴시간 시간표 데이터를 요청하고 웹 화면에 표시하는 예제입니다.
+
+특히 다음과 같은 상황에서 참고할 수 있습니다.
+
+- 컴시간 알리미 데이터를 웹페이지에 표시하고 싶은 경우
+- 학교 시간표 대시보드를 직접 만들고 싶은 경우
+- AI 바이브코딩으로 학교용 웹앱을 제작하려는 경우
+- 기존 `comcigan-parser` 방식이 동작하지 않아 대안 구조를 찾는 경우
+- Cloudflare Pages에서 간단한 시간표 서비스를 운영하고 싶은 경우
+
+---
+
+## 검색 키워드
+
+이 저장소는 다음 키워드와 관련이 있습니다.
+
+```text
+컴시간 알리미
+컴시간알리미
+컴시간 시간표
+컴시간 파싱
+컴시간 시간표 파서
+학교 시간표
+학교 시간표 대시보드
+시간표 웹앱
+Comcigan
+Comcigan parser
+Comcigan timetable
+school timetable
+school timetable parser
+Korean school timetable
+Cloudflare Pages Functions
+```
+
+---
+
+## 프로젝트 구조
+
+저장소 구조는 프로젝트 구성에 따라 다를 수 있으나, 일반적으로 다음과 같은 역할로 구성됩니다.
+
+```text
+.
+├── index.html              # 시간표 화면 구조
+├── styles.css              # 화면 디자인
+├── app.js                  # 시간표 렌더링 및 사용자 인터페이스
+└── functions/
+    └── api/
+        └── timetable.js    # 컴시간 알리미 서버 요청 및 시간표 데이터 처리
+```
+
+핵심 구현은 다음 두 부분입니다.
+
+```text
+functions/api/timetable.js
+app.js
+```
+
+- `functions/api/timetable.js`  
+  컴시간 알리미 서버에 요청을 보내고 시간표 데이터를 JSON 형태로 가공합니다.
+
+- `app.js`  
+  사용자가 선택한 학년, 날짜 등의 조건에 따라 시간표를 화면에 렌더링합니다.
+
+---
+
+## 핵심 구현 개념
+
+이 프로젝트의 기본 흐름은 다음과 같습니다.
+
+```text
+사용자 화면
+   ↓
+학년/날짜 선택
+   ↓
+프론트엔드 JavaScript에서 API 호출
+   ↓
+Cloudflare Pages Functions 프록시
+   ↓
+컴시간 알리미 서버 요청
+   ↓
+시간표 데이터 가공
+   ↓
+웹 화면에 반별·교시별 시간표 표시
+```
+
+브라우저에서 직접 컴시간 서버에 요청하면 CORS, 요청 형식, 응답 처리 등의 문제가 생길 수 있으므로, 이 프로젝트는 Cloudflare Pages Functions를 이용해 중간 API를 구성하는 방식을 사용합니다.
+
+---
+
+## 다른 학교에 적용하는 방법
+
+다른 학교에서 사용하려면 다음 항목을 수정해야 합니다.
+
+### 1. 학교 코드 변경
+
+컴시간 알리미에서 사용하는 학교 코드를 자신의 학교 코드로 바꿉니다.
+
+예시:
+
+```js
+const SCHOOL_CODE = "46043";
+```
+
+위 값은 예시입니다. 자신의 학교에 맞는 컴시간 학교 코드로 변경해야 합니다.
+
+### 2. 학년·반 수 조정
+
+학교의 학년 수, 반 수에 맞게 화면 렌더링 범위를 수정합니다.
+
+예시:
+
+```js
+const MAX_GRADE = 3;
+const MAX_CLASS = 7;
+const MAX_PERIOD = 7;
+```
+
+### 3. 화면 문구 수정
+
+학교명, 제목, 안내 문구 등을 자신의 학교에 맞게 수정합니다.
+
+예시:
+
+```html
+<h1>우리학교 시간표</h1>
+```
+
+---
+
+## API 사용 예시
+
+프로젝트에서 제공하는 API는 다음과 같은 방식으로 사용할 수 있습니다.
+
+```text
+/api/timetable?date=YYYY-MM-DD
+```
+
+예시:
+
+```text
+/api/timetable?date=2026-06-05
+```
+
+실제 파라미터 구조는 프로젝트 코드에 맞게 조정될 수 있습니다.
+
+---
+
+## AI 바이브코딩 활용 안내
+
+이 저장소는 AI에게 다음과 같이 요청할 때 참고 코드로 활용할 수 있습니다.
+
+```text
+이 GitHub 저장소의 컴시간 알리미 시간표 요청 방식을 참고해서
+우리 학교 코드로 시간표 웹페이지를 만들어줘.
+학년을 선택하면 오늘 날짜 기준으로 반별 시간표가 보이게 해줘.
+```
+
+또는 다음과 같이 요청할 수 있습니다.
+
+```text
+이 저장소의 functions/api/timetable.js 파일을 분석해서
+컴시간 알리미 시간표 데이터를 가져오는 부분만 재사용하고,
+화면은 새롭게 디자인해줘.
+```
+
+AI가 이 코드를 잘 이해하도록 하려면 다음 파일을 함께 보여주는 것이 좋습니다.
+
+```text
+functions/api/timetable.js
+app.js
 index.html
-script.js
-functions/
-  api/
-    timetable.js
-    meal.js
-    notice.js
-README.md
 ```
 
-## API 구조
+---
 
-- `/api/timetable?date=YYYY-MM-DD`: 컴시간 서버에서 오현중학교 시간표 JSON을 가져옵니다.
-- `/api/meal?date=YYYY-MM-DD`: 나이스 급식식단정보 API에서 오현중학교 급식 메뉴를 가져옵니다.
-- `/api/notice?grade=1`: Cloudflare KV에서 학년별 공지사항을 가져오거나 저장합니다.
+## 주의사항
 
-공지사항은 `localStorage`가 아니라 Cloudflare KV에 학년별로 저장됩니다.
+- 이 프로젝트는 비공식적으로 컴시간 알리미 시간표 데이터를 활용하는 예제입니다.
+- 컴시간 알리미 서버 구조가 변경되면 코드 수정이 필요할 수 있습니다.
+- 학교 코드, 요청 파라미터, 응답 데이터 구조는 학교나 시점에 따라 달라질 수 있습니다.
+- 상업적 사용이나 대규모 트래픽 발생 용도로 사용하기 전에 서비스 정책과 서버 부하 문제를 고려해야 합니다.
+- 학생 개인정보나 민감한 정보는 포함하지 않는 방식으로 사용해야 합니다.
 
-```txt
-notice:grade:1
-notice:grade:2
-notice:grade:3
+---
+
+## 추천 Topics
+
+GitHub 저장소의 About 영역에 다음 Topics를 추가하면 검색 노출에 도움이 됩니다.
+
+```text
+comcigan
+timetable
+school-timetable
+timetable-parser
+javascript
+html
+cloudflare-pages
+cloudflare-functions
+korean-school
+education
 ```
 
-## 자동 갱신 정책
+---
 
-```txt
-시계: 1초마다 갱신
-날짜 체크: 1시간마다
-시간표 확인: 5분마다 백그라운드 조회 후 변경이 있을 때만 화면 갱신
-급식: 날짜가 바뀔 때 갱신
-공지사항: 학년 변경 시 갱신
-수동 새로고침: 시간표 + 급식 + 공지사항 모두 갱신
+## 라이선스
+
+이 프로젝트를 다른 사람들이 자유롭게 참고하고 수정할 수 있게 하려면 MIT License 추가를 권장합니다.
+
+예시:
+
+```text
+MIT License
 ```
 
-## Cloudflare Pages 설정
+라이선스를 추가하지 않으면 다른 사용자가 코드를 어느 범위까지 사용할 수 있는지 명확하지 않을 수 있습니다.
 
-- Framework preset: None
-- Build command: 비움
-- Build output directory: `/`
-- Root directory: 비움
+---
 
-## NEIS 인증키 설정
+## 기여와 활용
 
-급식 메뉴를 불러오려면 Cloudflare Pages에 나이스 Open API 인증키를 Secret으로 넣어야 합니다.
+이 프로젝트는 학교 현장에서 필요한 시간표 서비스를 빠르게 만들기 위한 실용 예제입니다.  
+컴시간 알리미 데이터 연동, 학교 시간표 대시보드, 교육용 웹앱 제작에 관심 있는 분들이 참고하고 응용할 수 있습니다.
 
-```txt
-Workers & Pages
-→ comci-timetable
-→ Settings
-→ Variables and Secrets
-→ Add variable
-```
-
-```txt
-Variable name: NEIS_API_KEY
-Type: Secret
-Value: 발급받은 나이스 Open API 인증키
-Environment: Production
-```
-
-## 공지사항 KV 설정
-
-Cloudflare에서 KV 저장소를 하나 만듭니다.
-
-```txt
-Storage & databases
-→ KV
-→ Create namespace
-```
-
-추천 이름:
-
-```txt
-comci-notices
-```
-
-그다음 Pages 프로젝트에 KV를 연결합니다.
-
-```txt
-Workers & Pages
-→ comci-timetable
-→ Settings
-→ Functions 또는 Bindings
-→ KV namespace bindings
-→ Add binding
-```
-
-다음처럼 설정합니다.
-
-```txt
-Variable name: NOTICES
-KV namespace: comci-notices
-Environment: Production
-```
-
-`Variable name`은 반드시 `NOTICES`로 해야 합니다.
-
-## 다시 배포
-
-환경변수나 KV 바인딩을 추가한 뒤에는 다시 배포해야 합니다.
-
-```txt
-Deployments
-→ 최신 배포 오른쪽 ···
-→ Retry deployment 또는 Redeploy
-```
-
-또는 GitHub에 파일을 다시 commit하면 자동 배포됩니다.
-
-## 테스트 주소
-
-배포 후 아래 주소를 직접 열어 확인합니다.
-
-```txt
-https://도메인/api/meal?date=2026-05-27
-https://도메인/api/notice?grade=1
-```
-
-공지사항 API가 정상이라면 다음처럼 나옵니다.
-
-```json
-{"ok":true,"grade":"1","content":""}
-```
-
-## v24 변경
-
-- 시계는 1초마다 갱신됩니다.
-- 날짜는 1시간마다 확인하고, 날짜가 바뀌면 시간표와 급식을 다시 불러옵니다.
-- 시간표는 5분마다 백그라운드로 확인하고, 변경이 있을 때만 화면을 갱신합니다.
-- 급식은 날짜 변경 시 갱신됩니다.
-- 공지사항은 학년 변경 시 갱신됩니다.
-- 수동 새로고침은 시간표, 급식, 공지사항을 모두 갱신합니다.
-- 공지사항 저장/비우기는 비밀번호 없이 바로 처리됩니다.
-
-## 도메인별 기본 학년
-
-이 버전은 하나의 코드로 여러 도메인을 처리합니다.
-
-- `tt.djcom.kr`: 기본 1학년
-- `tt1.djcom.kr`: 기본 1학년
-- `tt2.djcom.kr`: 기본 2학년
-- `tt3.djcom.kr`: 기본 3학년
-
-기본 화면 모드는 다크모드입니다. 사용자가 화면에서 라이트/다크를 바꾸면 해당 컴퓨터의 브라우저 localStorage에 저장되어 다음 접속에도 유지됩니다.
+개선 아이디어, 오류 수정, 다른 학교 적용 사례는 자유롭게 확장할 수 있습니다.
