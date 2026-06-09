@@ -118,6 +118,9 @@
       display: flex;
       flex-direction: column;
       min-height: 0;
+      transform: translate3d(0, 0, 0);
+      transition: transform 1.2s ease;
+      will-change: transform;
     }
 
     .top {
@@ -805,6 +808,15 @@ const $ = (id) => document.getElementById(id);
 const THEME_STORAGE_KEY = "comci-dashboard-theme";
 const DEFAULT_THEME = "dark";
 
+// 화면 보호 설정
+const SCREEN_SHIFT_INTERVAL_MS = 5 * 60 * 1000;   // 5분마다 미세 이동
+const SCREEN_SHIFT_MAX_PX = 3;                     // 최대 ±3px
+const DARK_MODE_DURATION_MS = 90 * 60 * 1000;      // 다크모드 90분
+const LIGHT_MODE_DURATION_MS = 30 * 60 * 1000;     // 라이트모드 30분
+
+let autoThemeTimer = null;
+let currentAutoTheme = DEFAULT_THEME;
+
 function getDefaultGradeFromHost() {
   const host = window.location.hostname.toLowerCase();
 
@@ -821,25 +833,63 @@ function getStoredTheme() {
 }
 
 function getEffectiveTheme() {
-  return getStoredTheme();
+  return currentAutoTheme;
 }
 
-function applyTheme() {
-  const effective = getEffectiveTheme();
-  document.documentElement.setAttribute("data-theme", effective);
+function applyTheme(theme = getEffectiveTheme()) {
+  currentAutoTheme = theme;
+  document.documentElement.setAttribute("data-theme", theme);
 
   const button = $("themeBtn");
   if (button) {
-    button.textContent = effective === "dark" ? "☀️" : "🌙";
-    button.title = `${effective === "dark" ? "다크" : "라이트"} 모드 사용 중. 클릭하면 전환됩니다.`;
+    button.textContent = theme === "dark" ? "☀️" : "🌙";
+    button.title = `${theme === "dark" ? "다크" : "라이트"} 모드 사용 중. 클릭하면 전환됩니다.`;
     button.setAttribute("aria-label", button.title);
   }
+}
+
+function scheduleNextAutoTheme() {
+  clearTimeout(autoThemeTimer);
+  const duration = currentAutoTheme === "dark"
+    ? DARK_MODE_DURATION_MS
+    : LIGHT_MODE_DURATION_MS;
+
+  autoThemeTimer = setTimeout(() => {
+    const next = currentAutoTheme === "dark" ? "light" : "dark";
+    applyTheme(next);
+    scheduleNextAutoTheme();
+  }, duration);
+}
+
+function startAutoThemeCycle() {
+  // 페이지를 열 때는 항상 다크모드 90분부터 시작합니다.
+  applyTheme(DEFAULT_THEME);
+  scheduleNextAutoTheme();
 }
 
 function toggleThemeOverride() {
   const next = getEffectiveTheme() === "dark" ? "light" : "dark";
   localStorage.setItem(THEME_STORAGE_KEY, next);
-  applyTheme();
+  applyTheme(next);
+  // 수동 전환 후에는 선택한 모드 기준으로 자동 주기를 다시 시작합니다.
+  scheduleNextAutoTheme();
+}
+
+function moveScreenSlightly() {
+  const app = document.querySelector(".app");
+  if (!app) return;
+
+  const randomOffset = () =>
+    Math.floor(Math.random() * (SCREEN_SHIFT_MAX_PX * 2 + 1)) - SCREEN_SHIFT_MAX_PX;
+
+  const x = randomOffset();
+  const y = randomOffset();
+  app.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+}
+
+function startScreenShift() {
+  moveScreenSlightly();
+  setInterval(moveScreenSlightly, SCREEN_SHIFT_INTERVAL_MS);
 }
 
 function getKstDate() {
@@ -1322,7 +1372,8 @@ $("noticeInput").addEventListener("keydown", async (e) => {
 });
 
 (async function init() {
-  applyTheme();
+  startAutoThemeCycle();
+  startScreenShift();
   state.grade = getDefaultGradeFromHost();
   state.date = toDateInputValue(getKstDate());
   updateGradeButtons();
