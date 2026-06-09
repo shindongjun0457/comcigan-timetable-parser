@@ -734,7 +734,8 @@
       white-space: nowrap;
     }
 
-    /* 10분마다 표시되는 전체 화면 학교 로고 연출 */
+
+    /* 10분마다 표시되는 모노톤 골드 화면보호기 */
     .logo-show-overlay {
       position: fixed;
       inset: 0;
@@ -746,9 +747,9 @@
       visibility: hidden;
       opacity: 0;
       background:
-        radial-gradient(circle at 50% 45%, rgba(0, 255, 72, 0.23), transparent 22%),
-        radial-gradient(circle at 50% 50%, #10283d 0%, #06111f 52%, #010409 100%);
-      transition: opacity 650ms ease, visibility 650ms ease;
+        radial-gradient(circle at 50% 46%, rgba(212,175,55,.09) 0%, rgba(212,175,55,.025) 30%, transparent 62%),
+        linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+      transition: opacity 1.1s ease, visibility 1.1s ease;
     }
 
     .logo-show-overlay.active {
@@ -756,98 +757,88 @@
       opacity: 1;
     }
 
-    .logo-show-overlay::before,
-    .logo-show-overlay::after {
-      content: "";
-      position: absolute;
-      width: min(74vw, 900px);
-      aspect-ratio: 1;
-      border: 2px solid rgba(0, 255, 72, 0.28);
-      border-radius: 50%;
-      opacity: 0;
-    }
-
-    .logo-show-overlay.active::before {
-      animation: visionRing 3.1s ease-out 0.5s infinite;
-    }
-
-    .logo-show-overlay.active::after {
-      animation: visionRing 3.1s ease-out 1.55s infinite;
-    }
-
     .logo-show-beam {
       position: absolute;
-      inset: -40%;
+      inset: -25%;
       background:
         conic-gradient(
           from 0deg,
           transparent 0deg,
-          rgba(0, 255, 72, 0.10) 24deg,
-          transparent 50deg,
-          transparent 180deg,
-          rgba(56, 189, 248, 0.08) 220deg,
-          transparent 260deg
+          rgba(212,175,55,.028) 42deg,
+          transparent 82deg,
+          transparent 210deg,
+          rgba(212,175,55,.022) 260deg,
+          transparent 315deg
         );
-      opacity: 0;
-      transform: rotate(0deg);
-    }
-
-    .logo-show-overlay.active .logo-show-beam {
-      opacity: 1;
-      animation: visionBeam 8s linear infinite;
+      animation: monotoneAmbient 30s linear infinite;
     }
 
     .logo-show-content {
       position: relative;
       z-index: 2;
-      width: min(88vw, 1050px);
+      width: min(90vw, 900px);
       text-align: center;
       opacity: 0;
-      transform: translateY(28px) scale(0.70);
-      filter: blur(14px);
+      transform: translate3d(-6px, 18px, 0) scale(.96);
+      filter: blur(7px);
     }
 
     .logo-show-overlay.active .logo-show-content {
-      animation: visionContent 9.1s cubic-bezier(.16,.84,.28,1) forwards;
+      animation: monotoneContent 9.1s cubic-bezier(.18,.82,.24,1) forwards;
     }
 
     .logo-show-image {
       display: block;
-      width: min(42vw, 450px);
-      max-height: 48vh;
+      width: min(30vw, 330px);
+      max-height: 40vh;
       object-fit: contain;
-      margin: 0 auto;
+      margin: 0 auto clamp(24px, 3vh, 34px);
       filter:
-        drop-shadow(0 0 15px rgba(0, 255, 72, 0.95))
-        drop-shadow(0 0 55px rgba(0, 255, 72, 0.45));
+        sepia(.18)
+        saturate(.78)
+        brightness(.96)
+        contrast(1.06)
+        drop-shadow(0 0 14px rgba(212,175,55,.18));
     }
 
     .logo-show-overlay.active .logo-show-image {
-      animation: visionLogoPulse 2.0s ease-in-out 1.15s 3;
+      animation: monotoneLogo 4.8s ease-in-out 0.4s infinite;
     }
 
     .logo-show-school {
-      margin-top: clamp(12px, 2vh, 24px);
-      color: #ffffff;
-      font-size: clamp(1.2rem, 2.1vw, 2rem);
-      font-weight: 950;
-      letter-spacing: 0.13em;
-      text-shadow: 0 0 24px rgba(255, 255, 255, 0.25);
+      color: rgba(229,195,83,.94);
+      font-family:
+        "Noto Serif KR",
+        "Nanum Myeongjo",
+        Georgia,
+        serif;
+      font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: .11em;
+      line-height: 1.2;
+      text-shadow: 0 0 22px rgba(212,175,55,.12);
+    }
+
+    .logo-show-english {
+      margin-top: 12px;
+      color: rgba(212,175,55,.40);
+      font-size: clamp(.72rem, 1.05vw, .92rem);
+      font-weight: 600;
+      letter-spacing: .28em;
+      text-transform: uppercase;
     }
 
     .logo-show-vision {
-      margin: clamp(10px, 1.8vh, 18px) auto 0;
-      max-width: 94%;
-      color: #baffc9;
-      font-size: clamp(1.45rem, 3.25vw, 3.3rem);
-      font-weight: 950;
-      letter-spacing: -0.045em;
-      line-height: 1.2;
+      margin: 16px auto 0;
+      max-width: 92%;
+      color: rgba(229,195,83,.68);
+      font-size: clamp(1rem, 1.8vw, 1.5rem);
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1.45;
       word-break: keep-all;
       text-wrap: balance;
-      text-shadow:
-        0 0 10px rgba(0, 255, 72, 0.54),
-        0 0 34px rgba(0, 255, 72, 0.30);
+      text-shadow: 0 0 16px rgba(212,175,55,.10);
     }
 
     .logo-particle {
@@ -858,52 +849,109 @@
       width: var(--size);
       height: var(--size);
       border-radius: 50%;
-      background: #71ff96;
-      box-shadow: 0 0 13px rgba(0, 255, 72, 0.95);
+      background: rgba(229,195,83,.78);
+      box-shadow: 0 0 10px rgba(212,175,55,.38);
       opacity: 0;
     }
 
     .logo-show-overlay.active .logo-particle {
-      animation: visionParticle 5.7s ease-out infinite;
+      animation: monotoneParticle var(--duration, 8s) ease-in-out infinite;
       animation-delay: var(--delay);
     }
 
-    @keyframes visionContent {
-      0%   { opacity: 0; transform: translateY(30px) scale(.68); filter: blur(15px); }
-      12%  { opacity: 1; transform: translateY(0) scale(1.045); filter: blur(0); }
-      23%  { transform: translateY(0) scale(1); }
-      82%  { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-      100% { opacity: 0; transform: translateY(-18px) scale(1.09); filter: blur(11px); }
+    .logo-corner {
+      position: absolute;
+      width: 44px;
+      height: 44px;
+      opacity: .24;
     }
 
-    @keyframes visionLogoPulse {
-      0%, 100% {
-        transform: scale(1);
-        filter:
-          drop-shadow(0 0 15px rgba(0, 255, 72, 0.95))
-          drop-shadow(0 0 55px rgba(0, 255, 72, 0.45));
-      }
-      50% {
-        transform: scale(1.06);
-        filter:
-          drop-shadow(0 0 30px rgba(0, 255, 72, 1))
-          drop-shadow(0 0 95px rgba(0, 255, 72, 0.68));
-      }
+    .logo-corner::before,
+    .logo-corner::after {
+      content: "";
+      position: absolute;
+      background: rgba(212,175,55,.50);
     }
 
-    @keyframes visionRing {
-      0%   { transform: scale(.22); opacity: .82; }
-      100% { transform: scale(1.38); opacity: 0; }
+    .logo-corner::before {
+      width: 30px;
+      height: 1px;
     }
 
-    @keyframes visionBeam {
+    .logo-corner::after {
+      width: 1px;
+      height: 30px;
+    }
+
+    .logo-corner.tl { top: 6vh; left: 5vw; }
+    .logo-corner.tr { top: 6vh; right: 5vw; transform: rotate(90deg); }
+    .logo-corner.bl { bottom: 6vh; left: 5vw; transform: rotate(-90deg); }
+    .logo-corner.br { right: 5vw; bottom: 6vh; transform: rotate(180deg); }
+
+    @keyframes monotoneAmbient {
       to { transform: rotate(360deg); }
     }
 
-    @keyframes visionParticle {
-      0%   { opacity: 0; transform: translate3d(0, 40px, 0) scale(.2); }
-      14%  { opacity: .95; }
-      100% { opacity: 0; transform: translate3d(var(--dx), -190px, 0) scale(1.5); }
+    @keyframes monotoneContent {
+      0% {
+        opacity: 0;
+        transform: translate3d(-8px, 22px, 0) scale(.95);
+        filter: blur(8px);
+      }
+      15% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+        filter: blur(0);
+      }
+      80% {
+        opacity: 1;
+        transform: translate3d(6px, -7px, 0) scale(1.015);
+        filter: blur(0);
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(10px, -16px, 0) scale(1.035);
+        filter: blur(7px);
+      }
+    }
+
+    @keyframes monotoneLogo {
+      0%, 100% {
+        transform: translate3d(-4px, 3px, 0) scale(.985);
+        filter:
+          sepia(.18)
+          saturate(.78)
+          brightness(.93)
+          contrast(1.06)
+          drop-shadow(0 0 14px rgba(212,175,55,.17));
+      }
+      50% {
+        transform: translate3d(5px, -5px, 0) scale(1.035);
+        filter:
+          sepia(.26)
+          saturate(.94)
+          brightness(1.08)
+          contrast(1.08)
+          drop-shadow(0 0 30px rgba(212,175,55,.42))
+          drop-shadow(0 0 58px rgba(212,175,55,.16));
+      }
+    }
+
+    @keyframes monotoneParticle {
+      0% {
+        opacity: 0;
+        transform: translate3d(0, 28px, 0) scale(.5);
+      }
+      18% {
+        opacity: .6;
+      }
+      66% {
+        opacity: .20;
+      }
+      100% {
+        opacity: 0;
+        transform: translate3d(var(--dx), -125px, 0) scale(1.2);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1029,18 +1077,25 @@
 
   <div id="logoShowOverlay" class="logo-show-overlay" aria-hidden="true">
     <div class="logo-show-beam"></div>
-    <span class="logo-particle" style="--x:8%;--y:82%;--dx:45px;--size:4px;--delay:.2s"></span>
-    <span class="logo-particle" style="--x:17%;--y:91%;--dx:-28px;--size:7px;--delay:1.1s"></span>
-    <span class="logo-particle" style="--x:29%;--y:84%;--dx:38px;--size:5px;--delay:2.0s"></span>
-    <span class="logo-particle" style="--x:40%;--y:94%;--dx:-44px;--size:6px;--delay:.7s"></span>
-    <span class="logo-particle" style="--x:52%;--y:87%;--dx:32px;--size:4px;--delay:1.7s"></span>
-    <span class="logo-particle" style="--x:64%;--y:93%;--dx:-36px;--size:7px;--delay:2.6s"></span>
-    <span class="logo-particle" style="--x:76%;--y:84%;--dx:26px;--size:5px;--delay:1.25s"></span>
-    <span class="logo-particle" style="--x:88%;--y:90%;--dx:-30px;--size:6px;--delay:2.2s"></span>
-    <span class="logo-particle" style="--x:94%;--y:79%;--dx:22px;--size:4px;--delay:.5s"></span>
+
+    <span class="logo-corner tl"></span>
+    <span class="logo-corner tr"></span>
+    <span class="logo-corner bl"></span>
+    <span class="logo-corner br"></span>
+
+    <span class="logo-particle" style="--x:9%;--y:83%;--size:3px;--dx:28px;--duration:7.4s;--delay:-1.2s"></span>
+    <span class="logo-particle" style="--x:20%;--y:91%;--size:2px;--dx:-24px;--duration:8.6s;--delay:-4.4s"></span>
+    <span class="logo-particle" style="--x:32%;--y:85%;--size:4px;--dx:34px;--duration:9.2s;--delay:-2.7s"></span>
+    <span class="logo-particle" style="--x:45%;--y:93%;--size:2px;--dx:-30px;--duration:7.9s;--delay:-6.2s"></span>
+    <span class="logo-particle" style="--x:59%;--y:88%;--size:3px;--dx:27px;--duration:8.8s;--delay:-3.5s"></span>
+    <span class="logo-particle" style="--x:72%;--y:94%;--size:2px;--dx:-38px;--duration:9.5s;--delay:-7.1s"></span>
+    <span class="logo-particle" style="--x:85%;--y:86%;--size:4px;--dx:24px;--duration:8.2s;--delay:-5.1s"></span>
+    <span class="logo-particle" style="--x:93%;--y:80%;--size:2px;--dx:-20px;--duration:7.7s;--delay:-2.0s"></span>
+
     <div class="logo-show-content">
-      <img class="logo-show-image" src="./school-logo.png" alt="오현중학교 로고" />
+      <img class="logo-show-image" src="./school-logo.png" alt="오현중학교 교표">
       <div id="logoShowSchool" class="logo-show-school">오현중학교</div>
+      <div class="logo-show-english">Ohyun Middle School</div>
       <div id="logoShowVision" class="logo-show-vision"></div>
     </div>
   </div>
