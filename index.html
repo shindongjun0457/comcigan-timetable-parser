@@ -1718,7 +1718,11 @@ function renderNotice() {
   }
 }
 
+let noticeAuthenticated = false;
+
 function checkNoticePassword() {
+  if (noticeAuthenticated) return true;
+
   const password = window.prompt("공지사항 관리 비밀번호를 입력하세요.");
 
   if (password === null) return false;
@@ -1728,6 +1732,7 @@ function checkNoticePassword() {
     return false;
   }
 
+  noticeAuthenticated = true;
   return true;
 }
 
@@ -1810,8 +1815,6 @@ $("noticeEditBtn").addEventListener("click", () => {
 });
 
 $("noticeSaveBtn").addEventListener("click", async () => {
-  if (!checkNoticePassword()) return;
-
   try {
     const ok = await saveNotice($("noticeInput").value.trim());
     if (ok) {
@@ -1826,6 +1829,7 @@ $("noticeSaveBtn").addEventListener("click", async () => {
 
 $("noticeClearBtn").addEventListener("click", async () => {
   if (!checkNoticePassword()) return;
+  if (!window.confirm("공지사항을 모두 비우시겠습니까?")) return;
 
   try {
     const ok = await clearNotice();
